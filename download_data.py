@@ -27,12 +27,16 @@ def download_data(directory, data_url):
         except: 
             continue
     # Give time to let files finish downloading
-    sleep(10)
+    sleep(30)
     # Unzip files
-    for file_name in os.listdir(directory).copy():
+    file_names = [f for f in os.listdir(directory) if not f.startswith('.')]
+    for file_name in file_names:
         file_path = os.path.join(directory,file_name)
         with zipfile.ZipFile(file_path, 'r') as zip_ref:
             zip_ref.extractall(directory)
         os.remove(file_path)
     # Close page
     driver.close()
+    macosx_folder = os.path.join(directory, "__MACOSX")
+    if os.path.exists(macosx_folder):
+        os.rmdir(macosx_folder)
